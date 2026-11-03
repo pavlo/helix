@@ -404,6 +404,7 @@ impl MappableCommand {
         recent_picker, "Open recent file picker",
         file_picker_in_current_buffer_directory, "Open file picker at current buffer's directory",
         file_picker_in_current_directory, "Open file picker at current working directory",
+        file_picker_in_multiple_directories, "Open file picker in multiple configured directories",
         file_explorer, "Open file explorer in workspace root",
         file_explorer_in_current_buffer_directory, "Open file explorer at current buffer's directory",
         file_explorer_in_current_directory, "Open file explorer at current working directory",
@@ -3211,6 +3212,47 @@ fn file_picker_in_current_buffer_directory(cx: &mut Context) {
     };
 
     let picker = ui::file_picker(cx.editor, path);
+    cx.push_layer(Box::new(overlaid(picker)));
+}
+
+fn file_picker_in_multiple_directories(cx: &mut Context) {
+    let search_paths = cx.editor.config().file_picker.search_paths.clone();
+
+    if search_paths.is_empty() {
+        cx.editor.set_error(
+            "No file picker search paths configured. Set `editor.file-picker.search-paths` in config.toml",
+        );
+        return;
+    }
+
+    let mut valid_paths = Vec::with_capacity(search_paths.len());
+    let mut invalid_paths = Vec::new();
+    for path in search_paths {
+        let path = helix_stdx::path::expand_tilde(path).into_owned();
+        if path.is_dir() {
+            valid_paths.push(path);
+        } else {
+            invalid_paths.push(path);
+        }
+    }
+
+    if !invalid_paths.is_empty() {
+        let invalid = invalid_paths
+            .iter()
+            .map(|path| path.display().to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+        let message = format!("Ignoring unavailable file picker search path(s): {invalid}");
+        log::warn!("{message}");
+
+        if valid_paths.is_empty() {
+            cx.editor.set_error(message);
+            return;
+        }
+        cx.editor.set_warning(message);
+    }
+
+    let picker = ui::multi_root_file_picker(cx.editor, valid_paths);
     cx.push_layer(Box::new(overlaid(picker)));
 }
 

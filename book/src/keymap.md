@@ -295,6 +295,7 @@ This layer is a kludge of mappings, mostly pickers.
 | -----   | -----------                                                             | -------                                    |
 | `f`     | Open file picker at LSP workspace root                                  | `file_picker`                              |
 | `F`     | Open file picker at current working directory                           | `file_picker_in_current_directory`         |
+| `X`     | Open file picker in multiple configured directories                     | `file_picker_in_multiple_directories`      |
 | `e`     | Open file explorer at workspace root                                     | `file_explorer`                            |
 | `.`     | Open file explorer at current buffer's directory                        | `file_explorer_in_current_buffer_directory`|
 | `b`     | Open buffer picker                                                      | `buffer_picker`                            |

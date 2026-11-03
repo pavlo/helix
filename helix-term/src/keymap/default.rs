@@ -226,6 +226,7 @@ pub fn default() -> HashMap<Mode, KeyTrie> {
             "f" => file_picker,
             "l" => recent_picker, // l stands for latest files
             "F" => file_picker_in_current_directory,
+            "m" => file_picker_in_multiple_directories,
             "e" => file_explorer,
             "." => file_explorer_in_current_buffer_directory,
             "b" => buffer_picker,

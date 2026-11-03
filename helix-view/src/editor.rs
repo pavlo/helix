@@ -15,8 +15,8 @@ use crate::{
     Document, DocumentId, View, ViewId,
 };
 use helix_event::dispatch;
-use helix_loader::workspace_trust::{ImplicitTrustLevel, TrustQuery, WorkspaceTrust};
 use helix_loader::default_recents_file;
+use helix_loader::workspace_trust::{ImplicitTrustLevel, TrustQuery, WorkspaceTrust};
 use helix_vcs::DiffProviderRegistry;
 
 use futures_util::stream::select_all::SelectAll;
@@ -207,6 +207,9 @@ pub struct FilePickerConfig {
     /// WalkBuilder options
     /// Maximum Depth to recurse directories in file picker and global search. Defaults to `None`.
     pub max_depth: Option<usize>,
+    /// Directories searched by the multi-root file picker. Paths support `~` expansion and
+    /// unavailable directories are ignored. Defaults to `[]`.
+    pub search_paths: Vec<PathBuf>,
 }
 
 impl Default for FilePickerConfig {
@@ -221,6 +224,7 @@ impl Default for FilePickerConfig {
             git_global: true,
             git_exclude: true,
             max_depth: None,
+            search_paths: Vec::new(),
         }
     }
 }
