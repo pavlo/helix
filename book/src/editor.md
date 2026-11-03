@@ -218,7 +218,7 @@ All git related options are only enabled in a git repository.
 |`git-global` | Enables reading global `.gitignore`, whose path is specified in git's config: `core.excludesfile` option | `true`
 |`git-exclude` | Enables reading `.git/info/exclude` files | `true`
 |`max-depth` | Set with an integer value for maximum depth to recurse | Unset by default
-|`search-paths` | Directories searched by the multi-root file picker (`<space>X`). Paths support `~` expansion and unavailable directories are ignored | `[]`
+|`search-paths` | Directories searched by the multi-root file picker (`<space>m`). Paths support `~` expansion and unavailable directories are ignored | `[]`
 
 Example:
 

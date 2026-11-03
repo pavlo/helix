@@ -25,7 +25,7 @@ async fn send_keys(app: &mut Application, keys: &str) -> anyhow::Result<()> {
 async fn multi_root_file_picker_without_search_paths_reports_an_error() -> anyhow::Result<()> {
     let mut app = AppBuilder::new().build()?;
 
-    send_keys(&mut app, "<space>X").await?;
+    send_keys(&mut app, "<space>m").await?;
 
     assert_eq!(
         app.editor.get_status().map(|(_, severity)| severity),
@@ -59,7 +59,7 @@ async fn multi_root_file_picker_searches_displayed_paths_and_opens_the_absolute_
 
     let mut app = AppBuilder::new().with_config(config).build()?;
 
-    send_keys(&mut app, "<space>X").await?;
+    send_keys(&mut app, "<space>m").await?;
     // The root name and the file name are both part of the displayed path, so native
     // multi-term matching can disambiguate identical relative paths in different roots.
     send_keys(&mut app, "root_beta unique_two").await?;

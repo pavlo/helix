@@ -54,6 +54,7 @@ small, personal patch set on top of Helix.
 | --- | --- | --- | --- |
 | Automatic reload of files changed externally | [PR #13963](https://github.com/helix-editor/helix/pull/13963) by [@AnthonyMichaelTDM](https://github.com/AnthonyMichaelTDM) | Closed, not merged | `pr-13963` |
 | Recent files picker | [PR #15022](https://github.com/helix-editor/helix/pull/15022) by [@ascyii](https://github.com/ascyii) | Open | `pr-15022` |
+| Multi-root file picker | Local addition | — | `bf85c7084`, `2f4f0aa8c` |
 | MQL5 language support | Local addition | — | `d386a9117`, `57bef9bec` |
 
 The upstream pull requests are merged into `my-helix` as separate merge commits. This
@@ -140,7 +141,46 @@ Notes:
 - Entries are currently added when a file is **saved**, not when it is merely opened.
 - There is no option to disable recording yet; lower `max-save-entries` if needed.
 
-## 3. MQL5 language support
+## 3. Multi-root file picker
+
+Local addition, not an upstream PR.
+
+A second file picker that searches files across several configured directories in a
+single picker. Open it with `Space m` in normal mode.
+
+```toml
+[editor.file-picker]
+search-paths = [
+    "~/Projects",
+    "~/Documents",
+    "~/Work",
+    "~/Notes",
+]
+```
+
+| Key | Description |
+| --- | --- |
+| `Space m` | Open the file picker across all configured search paths |
+
+Notes:
+
+- Paths support `~` expansion.
+- Unavailable directories are ignored; the remaining valid paths are still searched.
+- An empty or missing `search-paths` list does not affect the standard `Space f` picker.
+- Results are shown with their full path (home folded to `~`), for example
+  `~/Projects/Helix/src/main.rs`, so files with identical relative paths in different
+  roots remain distinguishable.
+- Matching is performed by the existing `nucleo` implementation over the complete
+  displayed path. Root names, nested directories and filenames can all be searched,
+  including native multi-term queries.
+- The same ignore rules and file-picker options as the standard picker are respected.
+- Selecting a result opens its original absolute path.
+- Overlapping search roots are deduplicated.
+
+The implementation lives in `helix-term/src/ui/multi_root_picker.rs` and deliberately
+leaves the standard `ui::file_picker()` unchanged, keeping upstream merges simple.
+
+## 4. MQL5 language support
 
 Local addition, not an upstream PR.
 
