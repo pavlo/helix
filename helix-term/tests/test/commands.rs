@@ -6,6 +6,7 @@ mod insert;
 mod movement;
 mod reverse_selection_contents;
 mod rotate_selection_contents;
+mod workspace_edit;
 mod write;
 
 #[tokio::test(flavor = "multi_thread")]
@@ -1069,6 +1070,25 @@ async fn align_selections_with_varying_columns() -> anyhow::Result<()> {
             I    I  II IIIII
             I    I  II I
             I    I  II IIIII
+        "},
+    ))
+    .await?;
+
+    Ok(())
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn test_reflow_selections_in_one_paragraph() -> anyhow::Result<()> {
+    test((
+        indoc! {"\
+            #[a|]# b c d e
+            f #(g|)# h
+        "},
+        ":reflow 5<ret>",
+        indoc! {"\
+            #[a|]# b c
+            d e f
+            #(g|)# h
         "},
     ))
     .await?;
